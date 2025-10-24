@@ -59,10 +59,11 @@ int main(int argc, char* argv[]) {
         cout << "Warning: Possible overflow!" << endl;
         cout << "Overflow threshold:" << endl;
         cout << "\t" << scientific << setprecision(5) << threshold << endl;
-        cout << "\t" << floatToBits(threshold) << endl;
+        cout << "\t" << floatToBits(threshold);
     }
     return 0;
 }
+
 
 
 
