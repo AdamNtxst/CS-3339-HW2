@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <cmath>
 #include <limits>
-
 using namespace std;
 
 string floatToBits(float f) {
@@ -19,33 +18,37 @@ int main(int argc, char* argv[]) {
     if (argc != 3) {
         cout << "usage:\n\t./fp_overflow_checker loop_bound loop_counter" << endl;
         cout << "\n\tloop_bound is a positive floating-point value" << endl;
-        cout << "\tloop_counter is a positive floating-point value" << endl << endl;
+        cout << "\tloop_counter is a positive floating-point value" << endl;
         return 1;
     }
 
-    float loop_bound    = stof(argv[1]);
-    float loop_counter  = stof(argv[2]);
+    float loop_bound   = stof(argv[1]);
+    float loop_counter = stof(argv[2]);
 
-    cout << "\nLoop bound:   "  << floatToBits(loop_bound) << endl;
-    cout << "Loop counter: " << floatToBits(loop_counter) << endl;
-    cout << endl;
+    cout << "Loop bound:\t"  << floatToBits(loop_bound) << endl;
+    cout << "Loop counter:\t" << floatToBits(loop_counter) << endl << endl;
 
-    float threshold = loop_counter;
-    const float fmax = numeric_limits<float>::max();
-
-    if (loop_counter == 0.0f) {
+    if (!isfinite(loop_counter) || loop_counter <= 0.0f) {
         cout << "There is no overflow!" << endl;
         return 0;
     }
 
-    while (threshold < fmax) {
-        float sum = threshold + loop_counter;
-        if (sum == threshold) break; 
-        float nextThreshold = threshold * 2.0f;
-        if (!isfinite(nextThreshold) || nextThreshold <= threshold) {
-            break;
-        }
-        threshold = nextThreshold;
+    float two_inc = 2.0f * loop_counter;
+    float lg = log2f(two_inc);        
+    int k = static_cast<int>(ceil(lg));
+    int e = 23 + k;                   
+
+    const float fmax = numeric_limits<float>::max();
+    float threshold;
+
+    if (e > 127) {
+        threshold = fmax;
+    } else if (e < -150) {
+        threshold = powf(2.0f, static_cast<float>(e)); 
+        if (threshold <= 0.0f) threshold = numeric_limits<float>::denorm_min();
+    } else {
+        threshold = powf(2.0f, static_cast<float>(e));
+        if (!isfinite(threshold) || threshold > fmax) threshold = fmax;
     }
 
     bool willOverflow = (loop_bound >= threshold);
@@ -58,9 +61,9 @@ int main(int argc, char* argv[]) {
         cout << "\t" << scientific << setprecision(5) << threshold << endl;
         cout << "\t" << floatToBits(threshold) << endl;
     }
-
     return 0;
 }
+
 
 
 
