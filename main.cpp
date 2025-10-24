@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     bool willOverflow = (loop_bound >= threshold);
 
     if (!willOverflow) {
-        cout << "There is no overflow!" << endl;
+        cout << "There is no overflow!";
     } else {
         cout << "Warning: Possible overflow!" << endl;
         cout << "Overflow threshold:" << endl;
@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
 
 
 
