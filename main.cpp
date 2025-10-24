@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     float loop_bound   = stof(argv[1]);
     float loop_counter = stof(argv[2]);
 
-    cout << "Loop bound:\t"  << floatToBits(loop_bound) << endl;
+    cout << "\nLoop bound:\t"  << floatToBits(loop_bound) << endl;
     cout << "Loop counter:\t" << floatToBits(loop_counter) << endl << endl;
 
     if (!isfinite(loop_counter) || loop_counter <= 0.0f) {
@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
 
 
 
